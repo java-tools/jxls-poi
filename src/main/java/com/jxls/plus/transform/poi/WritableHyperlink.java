@@ -54,11 +54,12 @@ public class WritableHyperlink implements WritableCellValue {
         cell.setHyperlink(hyperlink);
         cell.setCellValue(title);
         if( linkStyle == null ){
-            linkStyle = createLinkStyle(workbook);
+            linkStyle = cell.getCellStyle();
         }
         cell.setCellStyle(linkStyle);
         return cell;
     }
+
 
     private CellStyle createLinkStyle(Workbook workbook) {
         linkStyle = workbook.createCellStyle();

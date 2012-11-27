@@ -101,6 +101,7 @@ public class PoiCellData extends CellData {
     public void writeToCell(Cell cell, Context context){
         evaluate(context);
         if( evaluationResult != null && evaluationResult instanceof WritableCellValue){
+            cell.setCellStyle(cellStyle);
             ((WritableCellValue)evaluationResult).writeToCell(cell, context);
         }else{
             updateCellGeneralInfo(cell);
