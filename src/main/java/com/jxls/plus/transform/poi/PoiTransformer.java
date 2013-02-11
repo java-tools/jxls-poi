@@ -5,6 +5,8 @@ import com.jxls.plus.transform.AbstractTransformer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,7 @@ public class PoiTransformer extends AbstractTransformer {
     static Logger logger = LoggerFactory.getLogger(PoiTransformer.class);
     
     Workbook workbook;
+    private boolean useSxssf = false;
     
 
     private PoiTransformer(Workbook workbook) {
@@ -38,6 +41,22 @@ public class PoiTransformer extends AbstractTransformer {
     public static PoiTransformer createTransformer(Workbook workbook) {
         PoiTransformer transformer = new PoiTransformer(workbook);
         transformer.readCellData();
+        return transformer;
+    }
+
+    public static PoiTransformer createSxssfTransformer(Workbook workbook){
+        return createSxssfTransformer(workbook, 100, false);
+    }
+
+    public static PoiTransformer createSxssfTransformer(Workbook workbook, int rowAccessWindowSize, boolean compressTmpFiles){
+        PoiTransformer transformer = new PoiTransformer(workbook);
+        transformer.readCellData();
+        transformer.useSxssf = true;
+        if( workbook instanceof  XSSFWorkbook){
+            transformer.workbook = new SXSSFWorkbook((XSSFWorkbook) workbook, rowAccessWindowSize, compressTmpFiles);
+        }else{
+            throw new IllegalArgumentException("Failed to create POI Transformer using SXSSF API as the input workbook is not XSSFWorkbook");
+        }
         return transformer;
     }
 
