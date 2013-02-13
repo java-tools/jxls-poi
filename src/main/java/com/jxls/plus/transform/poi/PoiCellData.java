@@ -55,43 +55,37 @@ public class PoiCellData extends CellData {
         switch( cell.getCellType() ){
             case Cell.CELL_TYPE_STRING:
                 richTextString = cell.getRichStringCellValue();
-                evaluationResult = richTextString.getString();
                 cellValue = richTextString.getString();
                 cellType = CellType.STRING;
                 break;
             case Cell.CELL_TYPE_BOOLEAN:
-                evaluationResult = cell.getBooleanCellValue();
-                cellValue = evaluationResult;
+                cellValue = cell.getBooleanCellValue();
                 cellType = CellType.BOOLEAN;
                 break;
             case Cell.CELL_TYPE_NUMERIC:
                 if(DateUtil.isCellDateFormatted(cell)) {
-                    evaluationResult = cell.getDateCellValue();
-                    cellValue = evaluationResult;
+                    cellValue = cell.getDateCellValue();
                     cellType = CellType.DATE;
                 } else {
-                    evaluationResult = cell.getNumericCellValue();
-                    cellValue = evaluationResult;
+                    cellValue = cell.getNumericCellValue();
                     cellType = CellType.NUMBER;
                 }
                 break;
             case Cell.CELL_TYPE_FORMULA:
                 formula = cell.getCellFormula();
-                evaluationResult = formula;
                 cellValue = formula;
                 cellType = CellType.FORMULA;
                 break;
             case Cell.CELL_TYPE_ERROR:
-                evaluationResult = cell.getErrorCellValue();
-                cellValue = evaluationResult;
+                cellValue = cell.getErrorCellValue();
                 cellType = CellType.ERROR;
                 break;
             case Cell.CELL_TYPE_BLANK:
-                evaluationResult = null;
                 cellValue = null;
                 cellType = CellType.BLANK;
                 break;
         }
+        evaluationResult = cellValue;
     }
 
     private void readCellStyle(Cell cell) {

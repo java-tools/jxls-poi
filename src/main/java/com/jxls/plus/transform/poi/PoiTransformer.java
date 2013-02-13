@@ -21,7 +21,7 @@ import java.util.List;
  *         Date: 1/23/12
  */
 public class PoiTransformer extends AbstractTransformer {
-    public static final int MAX_COLUMN_TO_READ_COMMENT = 10; 
+    public static final int MAX_COLUMN_TO_READ_COMMENT = 50;
     
     static Logger logger = LoggerFactory.getLogger(PoiTransformer.class);
     
@@ -94,7 +94,7 @@ public class PoiTransformer extends AbstractTransformer {
                 destRow = destSheet.createRow(targetCellRef.getRow());
             }
             if(!isIgnoreRowProps()){
-                destSheet.getRow(targetCellRef.getRow()).setHeight( sheetData.getRowData(srcCellRef.getRow()).getHeight());
+                destSheet.getRow(targetCellRef.getRow()).setHeight((short) sheetData.getRowData(srcCellRef.getRow()).getHeight());
             }
             org.apache.poi.ss.usermodel.Cell destCell = destRow.getCell(targetCellRef.getCol());
             if (destCell == null) {
@@ -111,7 +111,7 @@ public class PoiTransformer extends AbstractTransformer {
     }
 
     private void copyMergedRegions(CellData sourceCellData, CellRef destCell) {
-        if(sourceCellData.getSheetName() == null ){ throw new IllegalArgumentException("Sheet name is null in copyMergedRegion");}
+        if(sourceCellData.getSheetName() == null ){ throw new IllegalArgumentException("Sheet name is null in copyMergedRegions");}
         PoiSheetData sheetData = (PoiSheetData)sheetMap.get( sourceCellData.getSheetName() );
         CellRangeAddress cellMergedRegion = null;
         for (CellRangeAddress mergedRegion : sheetData.getMergedRegions()) {
