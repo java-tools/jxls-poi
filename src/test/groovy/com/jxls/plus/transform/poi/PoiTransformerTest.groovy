@@ -1,5 +1,6 @@
 package com.jxls.plus.transform.poi
 
+import org.apache.poi.ss.usermodel.PrintSetup
 import spock.lang.Specification
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.Workbook
@@ -38,6 +39,9 @@ class PoiTransformerTest extends Specification{
         font.setItalic(true);
         customStyle.setFont( font );
         Sheet sheet = wb.createSheet("sheet 1")
+        PrintSetup printSetup = sheet.getPrintSetup()
+        printSetup.paperSize = PrintSetup.A3_PAPERSIZE
+        printSetup.footerMargin = 15
         Row row0 = sheet.createRow(0)
         row0.createCell(0).setCellValue(1.5)
         row0.createCell(1).setCellValue('${x}')
@@ -139,6 +143,9 @@ class PoiTransformerTest extends Specification{
             Sheet sheet1 = wb.getSheet("sheet2")
             Row row1 = sheet1.getRow(7)
             row1.getCell(7).getStringCellValue() == "Abcde"
+            sheet1.printSetup.footerMargin == 15
+            sheet1.printSetup.paperSize == PrintSetup.A3_PAPERSIZE
+
     }
     
     def "test transform multiple times"(){
@@ -298,7 +305,6 @@ class PoiTransformerTest extends Specification{
             commentedCells.get(1).getCellComment() == "comment 2"
     }
 
-    @Ignore("the test does not work with dynamically created workbook for some reason")
     def "test addImage"(){
         given:
             InputStream imageInputStream = PoiTransformerTest.class.getResourceAsStream("ja.png");

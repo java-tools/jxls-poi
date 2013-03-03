@@ -32,4 +32,38 @@ public class PoiUtil {
     public WritableCellValue hyperlink(String address, String linkTypeString){
         return new WritableHyperlink(address, linkTypeString);
     }
+
+    public static void copySheetProperties(Sheet src, Sheet dest){
+        dest.setAutobreaks(src.getAutobreaks());
+        dest.setDisplayGridlines(src.getDisplayGuts());
+        dest.setVerticallyCenter(src.getVerticallyCenter());
+        dest.setFitToPage(src.getFitToPage());
+        dest.setForceFormulaRecalculation(src.getForceFormulaRecalculation());
+        dest.setRowSumsRight(src.getRowSumsRight());
+        dest.setRowSumsBelow( src.getRowSumsBelow() );
+        copyPrintSetup(src, dest);
+    }
+
+    private static void copyPrintSetup(Sheet src, Sheet dest) {
+        PrintSetup srcPrintSetup = src.getPrintSetup();
+        PrintSetup destPrintSetup = dest.getPrintSetup();
+        destPrintSetup.setCopies(srcPrintSetup.getCopies());
+        destPrintSetup.setDraft(srcPrintSetup.getDraft());
+        destPrintSetup.setFitHeight(srcPrintSetup.getFitHeight());
+        destPrintSetup.setFitWidth(srcPrintSetup.getFitWidth());
+        destPrintSetup.setFooterMargin(srcPrintSetup.getFooterMargin());
+        destPrintSetup.setHeaderMargin(srcPrintSetup.getHeaderMargin());
+        destPrintSetup.setHResolution(srcPrintSetup.getHResolution());
+        destPrintSetup.setLandscape(srcPrintSetup.getLandscape());
+        destPrintSetup.setLeftToRight(srcPrintSetup.getLeftToRight());
+        destPrintSetup.setNoColor(srcPrintSetup.getNoColor());
+        destPrintSetup.setNoOrientation(srcPrintSetup.getNoOrientation());
+        destPrintSetup.setNotes(srcPrintSetup.getNotes());
+        destPrintSetup.setPageStart(srcPrintSetup.getPageStart());
+        destPrintSetup.setPaperSize(srcPrintSetup.getPaperSize());
+        destPrintSetup.setScale(srcPrintSetup.getScale());
+        destPrintSetup.setUsePage(srcPrintSetup.getUsePage());
+        destPrintSetup.setValidSettings(srcPrintSetup.getValidSettings());
+        destPrintSetup.setVResolution( srcPrintSetup.getVResolution() );
+    }
 }

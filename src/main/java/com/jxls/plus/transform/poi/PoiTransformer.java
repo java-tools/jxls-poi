@@ -84,6 +84,7 @@ public class PoiTransformer extends AbstractTransformer {
             Sheet destSheet = workbook.getSheet(targetCellRef.getSheetName());
             if(destSheet == null){
                 destSheet = workbook.createSheet(targetCellRef.getSheetName());
+                PoiUtil.copySheetProperties( workbook.getSheet(srcCellRef.getSheetName()), destSheet);
             }
             SheetData sheetData = sheetMap.get(srcCellRef.getSheetName());
             if(!isIgnoreColumnProps()){
