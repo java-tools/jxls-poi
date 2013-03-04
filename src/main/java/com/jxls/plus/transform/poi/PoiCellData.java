@@ -109,11 +109,11 @@ public class PoiCellData extends CellData {
         if( hyperlink != null ){
             cell.setHyperlink( hyperlink );
         }
-        if(comment != null ){
-            cell.setCellComment(comment);
+        if(comment != null && !PoiUtil.isJxComment(getCellComment())){
+            PoiUtil.setCellComment(cell, getCellComment(), comment.getAuthor(), null);
         }
     }
-    
+
     static int getPoiCellType(CellType cellType){
         if( cellType == null ){
             return Cell.CELL_TYPE_BLANK;

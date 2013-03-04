@@ -1,5 +1,6 @@
 package com.jxls.plus.transform.poi;
 
+import com.jxls.plus.builder.xls.XlsCommentAreaBuilder;
 import org.apache.poi.ss.usermodel.*;
 
 /**
@@ -14,10 +15,10 @@ public class PoiUtil {
         CreationHelper factory = wb.getCreationHelper();
         if( anchor == null ){
             anchor = factory.createClientAnchor();
-            anchor.setCol1(0);
-            anchor.setCol2(1);
-            anchor.setRow1(0);
-            anchor.setRow2(1);
+            anchor.setCol1(cell.getColumnIndex() + 1);
+            anchor.setCol2(cell.getColumnIndex() + 3);
+            anchor.setRow1(cell.getRowIndex());
+            anchor.setRow2(cell.getRowIndex() + 2);
         }
         Comment comment = drawing.createCellComment(anchor);
         comment.setString(factory.createRichTextString(commentText));
@@ -65,5 +66,16 @@ public class PoiUtil {
         destPrintSetup.setUsePage(srcPrintSetup.getUsePage());
         destPrintSetup.setValidSettings(srcPrintSetup.getValidSettings());
         destPrintSetup.setVResolution( srcPrintSetup.getVResolution() );
+    }
+
+    public static boolean isJxComment(String cellComment) {
+        if(cellComment == null ) return false;
+        String[] commentLines = cellComment.split("\\n");
+        for (String commentLine : commentLines) {
+            if( (commentLine != null) && XlsCommentAreaBuilder.isCommandString( commentLine.trim() ) ){
+                return true;
+            }
+        }
+        return false;
     }
 }
