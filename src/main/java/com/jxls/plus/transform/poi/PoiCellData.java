@@ -21,6 +21,7 @@ public class PoiCellData extends CellData {
     private CellStyle cellStyle;
     private Hyperlink hyperlink;
     private Comment comment;
+    private String commentAuthor;
 
     public PoiCellData(CellRef cellRef) {
         super(cellRef);
@@ -42,6 +43,9 @@ public class PoiCellData extends CellData {
     private void readCellGeneralInfo(Cell cell) {
         hyperlink = cell.getHyperlink();
         comment = cell.getCellComment();
+        if(comment != null ){
+            commentAuthor = comment.getAuthor();
+        }
         if( comment != null && comment.getString() != null ){
             setCellComment( comment.getString().getString() );
         }
@@ -110,7 +114,7 @@ public class PoiCellData extends CellData {
             cell.setHyperlink( hyperlink );
         }
         if(comment != null && !PoiUtil.isJxComment(getCellComment())){
-            PoiUtil.setCellComment(cell, getCellComment(), comment.getAuthor(), null);
+            PoiUtil.setCellComment(cell, getCellComment(), commentAuthor, null);
         }
     }
 

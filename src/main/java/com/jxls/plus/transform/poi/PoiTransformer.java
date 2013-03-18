@@ -173,10 +173,9 @@ public class PoiTransformer extends AbstractTransformer {
         if( cell == null ) return;
         cell.setCellType(Cell.CELL_TYPE_BLANK);
         cell.setCellStyle(workbook.getCellStyleAt((short) 0));
-//  todo: after removing cell comment MS Excel displays warning 'File Error: data may have been lost' when opening the file  (seems like POI issue)
-//        if( cell.getCellComment() != null ){
-//            cell.removeCellComment();
-//        }
+        if( cell.getCellComment() != null ){
+            cell.removeCellComment();
+        }
     }
 
     public List<CellData> getCommentedCells() {
