@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class PoiContext extends Context {
 
-    public static final String POI_OBJECT_KEY = "poi";
+    public static final String POI_OBJECT_KEY = "util";
 
     public PoiContext() {
         varMap.put(POI_OBJECT_KEY, new PoiUtil());

@@ -20,8 +20,8 @@ public class WritableHyperlink implements WritableCellValue {
 
     CellStyle linkStyle;
 
-    public WritableHyperlink(String address, String linkTypeString) {
-        this(address, null, linkTypeString);
+    public WritableHyperlink(String address, String title) {
+        this(address, title, LINK_URL);
     }
 
     public WritableHyperlink(String address, String title, String linkTypeString) {

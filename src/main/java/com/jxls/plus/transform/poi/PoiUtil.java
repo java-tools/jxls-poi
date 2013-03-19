@@ -30,8 +30,8 @@ public class PoiUtil {
         return new WritableHyperlink(address, link, linkTypeString);
     }
 
-    public WritableCellValue hyperlink(String address, String linkTypeString){
-        return new WritableHyperlink(address, linkTypeString);
+    public WritableCellValue hyperlink(String address, String title){
+        return new WritableHyperlink(address, title);
     }
 
     public static void copySheetProperties(Sheet src, Sheet dest){

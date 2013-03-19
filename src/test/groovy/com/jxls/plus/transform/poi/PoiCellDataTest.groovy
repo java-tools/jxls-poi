@@ -43,7 +43,7 @@ class PoiCellDataTest extends Specification{
         sheet2.createRow(0).createCell(0)
         sheet2.createRow(1).createCell(1);
 //        sheet2.getRow(1).createCell(2).setCellValue('''${poi.hyperlink('http://google.com/', 'URL')}''')
-        sheet2.getRow(1).createCell(2).setCellValue('''${poi.hyperlink('http://google.com/', 'Google', 'URL')}''')
+        sheet2.getRow(1).createCell(2).setCellValue('''${util.hyperlink('http://google.com/', 'Google', 'URL')}''')
     }
 
     def "test get cell Value"(){
