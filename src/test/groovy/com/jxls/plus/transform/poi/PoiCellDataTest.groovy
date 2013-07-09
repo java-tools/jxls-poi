@@ -110,6 +110,30 @@ class PoiCellDataTest extends Specification{
             wb.getSheetAt(1).getRow(0).getCell(0).getNumericCellValue() == 35
     }
 
+    def "test write BigDecimal"(){
+        setup:
+            PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 0, 1), wb.getSheetAt(0).getRow(0).getCell(1))
+            def context = new Context()
+            BigDecimal xValue = new BigDecimal(1234.56D)
+            context.putVar("x", xValue)
+        when:
+            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context)
+        then:
+            xValue == new BigDecimal( wb.getSheetAt(1).getRow(1).getCell(1).getNumericCellValue() )
+    }
+
+    def "test write Date"(){
+        setup:
+            PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 0, 1), wb.getSheetAt(0).getRow(0).getCell(1))
+            def context = new Context()
+            Date today = new Date()
+            context.putVar("x", today)
+        when:
+            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context)
+        then:
+            today == wb.getSheetAt(1).getRow(1).getCell(1).getDateCellValue()
+    }
+
     def "test write user formula"(){
         setup:
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 0, 3),wb.getSheetAt(0).getRow(0).getCell(3))

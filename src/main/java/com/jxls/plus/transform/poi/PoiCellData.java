@@ -9,6 +9,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 /**
  * Cell data wrapper for POI cell
  * @author Leonid Vysochyn
@@ -153,12 +155,11 @@ public class PoiCellData extends CellData {
             case BOOLEAN:
                 cell.setCellValue( (Boolean)evaluationResult );
                 break;
+            case DATE:
+                cell.setCellValue((Date)evaluationResult);
+                break;
             case NUMBER:
-                    if( evaluationResult instanceof Integer){
-                        cell.setCellValue(((Integer)evaluationResult).doubleValue());
-                    }else{
-                        cell.setCellValue((Double) evaluationResult);
-                    }
+                    cell.setCellValue(((Number) evaluationResult).doubleValue());
                 break;
             case FORMULA:
                 try{
