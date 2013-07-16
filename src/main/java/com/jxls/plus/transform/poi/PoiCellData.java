@@ -6,6 +6,7 @@ import com.jxls.plus.common.CellRef;
 import com.jxls.plus.common.Context;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,12 @@ public class PoiCellData extends CellData {
 
     private void readCellGeneralInfo(Cell cell) {
         hyperlink = cell.getHyperlink();
-        comment = cell.getCellComment();
+        try {
+            comment = cell.getCellComment();
+        } catch (Exception e) {
+            logger.error("Failed to read cell comment at " + new CellReference(cell).formatAsString(), e);
+            return;
+        }
         if(comment != null ){
             commentAuthor = comment.getAuthor();
         }
