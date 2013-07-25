@@ -27,6 +27,7 @@ import spock.lang.Ignore
 class PoiTransformerTest extends Specification{
     Workbook wb;
     CellStyle customStyle;
+    byte[] workbookBytes;
 
     def setup(){
         wb = new HSSFWorkbook();
@@ -63,6 +64,9 @@ class PoiTransformerTest extends Specification{
         row2.createCell(2).setCellValue('${4*4}')
         row2.createCell(3).setCellValue('${2*x}x and ${2*y}y')
         row2.createCell(4).setCellValue('$[${myvar}*SUM(A1:A5) + ${myvar2}]')
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        wb.write(os)
+        workbookBytes = os.toByteArray()
     }
 
     def "test template cells storage"(){
@@ -316,5 +320,29 @@ class PoiTransformerTest extends Specification{
             def pictures = wb.getAllPictures()
             pictures.size() == 1
     }
+
+    def "test write without output stream"(){
+        given:
+        InputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(workbookBytes))
+        def poiTransformer = PoiTransformer.createTransformer(inputStream)
+        when:
+        poiTransformer.write()
+        then:
+        def e = thrown(IllegalStateException)
+        e.cause == null
+        e.message == "Cannot write a workbook with an uninitialized output stream"
+    }
+
+    def "test write workbook"(){
+        given:
+        InputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(workbookBytes))
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
+        def poiTransformer = PoiTransformer.createTransformer(inputStream, outputStream)
+        when:
+        poiTransformer.write()
+        then:
+        outputStream.size() > 0
+    }
+
 
 }

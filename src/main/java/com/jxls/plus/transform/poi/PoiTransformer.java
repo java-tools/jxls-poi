@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +28,18 @@ public class PoiTransformer extends AbstractTransformer {
     
     Workbook workbook;
     private boolean useSxssf = false;
-    
+    private OutputStream outputStream;
+    private InputStream inputStream;
 
     private PoiTransformer(Workbook workbook) {
         this.workbook = workbook;
+    }
+
+    public static PoiTransformer createTransformer(InputStream is, OutputStream os) throws IOException, InvalidFormatException {
+        PoiTransformer transformer = createTransformer(is);
+        transformer.outputStream = os;
+        transformer.inputStream = is;
+        return transformer;
     }
     
     public static PoiTransformer createTransformer(InputStream is) throws IOException, InvalidFormatException {
@@ -215,6 +224,17 @@ public class PoiTransformer extends AbstractTransformer {
         addImage(areaRef, pictureIdx);
     }
 
+    public void write() throws IOException {
+        if( outputStream == null ){
+            throw new IllegalStateException("Cannot write a workbook with an uninitialized output stream");
+        }
+        if( workbook == null ){
+            throw new IllegalStateException("Cannot write an uninitialized workbook");
+        }
+        workbook.write(outputStream);
+        outputStream.close();
+    }
+
 
     private int findPoiPictureTypeByImageType(ImageType imageType){
         int poiType = -1;
@@ -258,4 +278,15 @@ public class PoiTransformer extends AbstractTransformer {
         return commentDataCells;
     }
 
+    public OutputStream getOutputStream() {
+        return outputStream;
+    }
+
+    public void setOutputStream(OutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
+
+    public InputStream getInputStream() {
+        return inputStream;
+    }
 }
