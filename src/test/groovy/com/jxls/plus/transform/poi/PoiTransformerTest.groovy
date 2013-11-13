@@ -69,6 +69,17 @@ class PoiTransformerTest extends Specification{
         workbookBytes = os.toByteArray()
     }
 
+    def "test initial context creation"(){
+        given:
+            def poiTransformer = PoiTransformer.createTransformer(wb)
+        when:
+            Context context = poiTransformer.createInitialContext()
+        then:
+            def utilClass = context.getVar(PoiTransformer.POI_CONTEXT_KEY)
+            assert utilClass != null
+            assert utilClass instanceof PoiUtil
+    }
+
     def "test template cells storage"(){
         when:
             def poiTransformer = PoiTransformer.createTransformer(wb)

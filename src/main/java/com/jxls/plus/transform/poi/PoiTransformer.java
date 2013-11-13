@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class PoiTransformer extends AbstractTransformer {
     public static final int MAX_COLUMN_TO_READ_COMMENT = 50;
+    public static final String POI_CONTEXT_KEY = "util";
     
     static Logger logger = LoggerFactory.getLogger(PoiTransformer.class);
     
@@ -67,6 +68,13 @@ public class PoiTransformer extends AbstractTransformer {
             throw new IllegalArgumentException("Failed to create POI Transformer using SXSSF API as the input workbook is not XSSFWorkbook");
         }
         return transformer;
+    }
+
+    @Override
+    public Context createInitialContext() {
+        Context context = new Context();
+        context.putVar(POI_CONTEXT_KEY, new PoiUtil());
+        return context;
     }
 
     public Workbook getWorkbook() {
