@@ -214,7 +214,7 @@ public class PoiTransformer extends AbstractTransformer {
         return commentedCells;
     }
 
-    public void addImage(AreaRef areaRef, int imageIdx) {
+    private void addImage(AreaRef areaRef, int imageIdx) {
         CreationHelper helper = workbook.getCreationHelper();
         Sheet sheet = workbook.getSheet(areaRef.getSheetName());
         Drawing drawing = sheet.createDrawingPatriarch();
