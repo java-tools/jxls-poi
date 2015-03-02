@@ -1,4 +1,4 @@
-package com.jxls.plus.transform.poi
+package org.jxls.transform.poi
 
 import spock.lang.Specification
 import org.apache.poi.ss.usermodel.Workbook
@@ -8,9 +8,9 @@ import org.apache.poi.ss.usermodel.Row
 
 /**
  * @author Leonid Vysochyn
- * Date: 2/1/12 12:05 PM
+ * Date: 2/1/12 2:03 PM
  */
-class PoiSheetDataTest extends Specification{
+class PoiRowDataTest extends Specification{
     Workbook wb;
 
     def setup(){
@@ -38,15 +38,21 @@ class PoiSheetDataTest extends Specification{
         sheet2.createRow(0).createCell(0)
     }
 
-    def "test read sheet data"(){
+    def "test createRowData"(){
         when:
-            Sheet sheet = wb.getSheetAt(0)
-            PoiSheetData sheetData = PoiSheetData.createSheetData(sheet)
+            def row1 = wb.getSheetAt(0).getRow(1)
+            def rowData = PoiRowData.createRowData(row1);
         then:
-            sheet.getSheetName() == sheetData.getSheetName()
-            sheet.getColumnWidth(2) == sheetData.getColumnWidth(2)
-            sheet.getColumnWidth(1) == sheetData.getColumnWidth(1)
-            sheet.getRow(0).getHeight() == sheetData.getRowData(0).getHeight()
-            3 == sheetData.getNumberOfRows()
+            rowData.getHeight() == row1.getHeight()
+            rowData.getNumberOfCells() == 4
+            rowData.getCellData(2).getCellValue() == '${y*y}'
+            rowData.getCellData(2).getSheetName() == "sheet 1"
+    }
+    
+    def "test createRowData for null row"(){
+        given:
+            def row5 = wb.getSheetAt(0).getRow(5)
+        expect:
+            PoiRowData.createRowData(row5) == null
     }
 }

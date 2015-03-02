@@ -1,6 +1,6 @@
-package com.jxls.plus.transform.poi;
+package org.jxls.transform.poi;
 
-import com.jxls.plus.builder.xls.XlsCommentAreaBuilder;
+import org.jxls.builder.xls.XlsCommentAreaBuilder;
 import org.apache.poi.ss.usermodel.*;
 
 /**

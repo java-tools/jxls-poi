@@ -1,12 +1,12 @@
-package com.jxls.plus.transform.poi;
+package org.jxls.transform.poi;
 
-import com.jxls.plus.common.*;
-import com.jxls.plus.transform.AbstractTransformer;
+import org.jxls.transform.AbstractTransformer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jxls.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * POI implementation of {@link com.jxls.plus.transform.Transformer} interface
+ * POI implementation of {@link org.jxls.transform.Transformer} interface
  * @author Leonid Vysochyn
  *         Date: 1/23/12
  */

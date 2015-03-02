@@ -1,4 +1,4 @@
-package com.jxls.plus.transform.poi
+package org.jxls.transform.poi
 
 import org.apache.poi.ss.usermodel.PrintSetup
 import spock.lang.Specification
@@ -7,18 +7,17 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Row
 
-import com.jxls.plus.common.Context
-import com.jxls.plus.common.CellData
-import com.jxls.plus.common.CellRef
+import org.jxls.common.Context
+import org.jxls.common.CellData
+import org.jxls.common.CellRef
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.IndexedColors
 import org.apache.poi.ss.usermodel.Font
 import org.apache.poi.util.IOUtils
-import com.jxls.plus.common.AreaRef
-import com.jxls.plus.common.ImageType
-import spock.lang.Ignore
+import org.jxls.common.AreaRef
+import org.jxls.common.ImageType
 
 /**
  * @author Leonid Vysochyn
