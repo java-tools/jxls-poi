@@ -16,6 +16,7 @@
         <gmavenProviderSelection>2.0</gmavenProviderSelection>
         <groovyVersion>2.0.0</groovyVersion>
         <spockVersion>1.0-groovy-2.4</spockVersion>
+        <poi.version>3.12</poi.version>
     </properties>
 
     <build>
@@ -65,12 +66,12 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.12-beta1</version>
+            <version>${poi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.12-beta1</version>
+            <version>${poi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
