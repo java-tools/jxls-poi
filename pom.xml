@@ -5,7 +5,7 @@
     <groupId>org.jxls</groupId>
     <artifactId>jxls-poi</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>jxls-poi</name>
     <url>http://jxls.sf.net</url>
 
@@ -19,9 +19,21 @@
         <poi.version>3.12</poi.version>
     </properties>
 
-    <build>
-      <plugins>
+    <scm>
+        <developerConnection>scm:git:https://bitbucket.org/leonate/jxls-poi.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.9</version>
+            </extension>
+        </extensions>
+
+      <plugins>
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-compiler-plugin</artifactId>
@@ -52,6 +64,10 @@
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-release-plugin</artifactId>
               <version>2.5.2</version>
+              <configuration>
+                  <pushChanges>false</pushChanges>
+                  <localCheckout>true</localCheckout>
+              </configuration>
           </plugin>
       </plugins>
     </build>
@@ -61,7 +77,7 @@
         <dependency>
             <groupId>org.jxls</groupId>
             <artifactId>jxls</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
+            <version>[2.0.0,)</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -119,21 +135,25 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>jxls</id>
+            <name>Jxls repo at Sourceforge</name>
+            <url>http://jxls.sourceforge.net/repository/releases/</url>
+        </repository>
+    </repositories>
+
     <distributionManagement>
-        <snapshotRepository>
-            <id>jxls.snapshots</id>
-            <name>jXLS Snapshot Repository at Sourceforge</name>
-            <url>scp://shell.sourceforge.net/home/project-web/jxls/htdocs/repository/releases</url>
-        </snapshotRepository>
         <repository>
             <id>jxls.releases</id>
             <name>jXLS Releases Repository at Sourceforge</name>
             <url>scp://shell.sourceforge.net/home/project-web/jxls/htdocs/repository/releases</url>
         </repository>
-        <site>
-            <id>jxls.sf.net</id>
-            <url>scp://shell.sourceforge.net/home/project-web/jxls/htdocs</url>
-        </site>
+        <snapshotRepository>
+            <id>jxls.snapshots</id>
+            <name>jXLS Snapshot Repository at Sourceforge</name>
+            <url>scp://shell.sourceforge.net/home/project-web/jxls/htdocs/repository/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
 </project>
