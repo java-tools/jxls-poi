@@ -184,15 +184,26 @@ public class PoiTransformer extends AbstractTransformer {
         if(cellRef == null || cellRef.getSheetName() == null ) return;
         Sheet sheet = workbook.getSheet(cellRef.getSheetName());
         if( sheet == null ) return;
+        removeCellComment(sheet, cellRef.getRow(), cellRef.getCol());
         Row row = sheet.getRow(cellRef.getRow());
         if( row == null ) return;
         Cell cell = row.getCell(cellRef.getCol());
-        if( cell == null ) return;
+        if ( cell == null ) {
+            if ( sheet.getCellComment(cellRef.getRow(), cellRef.getCol()) != null ){
+                cell = row.createCell(cellRef.getCol());
+                cell.removeCellComment();
+            }
+            return;
+        }
         cell.setCellType(Cell.CELL_TYPE_BLANK);
         cell.setCellStyle(workbook.getCellStyleAt((short) 0));
         if( cell.getCellComment() != null ){
             cell.removeCellComment();
         }
+    }
+
+    private void removeCellComment(Sheet sheet, int row, int col) {
+        Comment comment = sheet.getCellComment(row, col);
     }
 
     public List<CellData> getCommentedCells() {
