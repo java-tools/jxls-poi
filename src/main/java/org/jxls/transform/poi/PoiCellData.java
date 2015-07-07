@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Cell data wrapper for POI cell
@@ -25,13 +26,19 @@ public class PoiCellData extends CellData {
     private Hyperlink hyperlink;
     private Comment comment;
     private String commentAuthor;
+    private Cell cell;
 
     public PoiCellData(CellRef cellRef) {
         super(cellRef);
     }
 
+    public PoiCellData(CellRef cellRef, Cell cell) {
+        super(cellRef);
+        this.cell = cell;
+    }
+
     public static PoiCellData createCellData(CellRef cellRef, Cell cell){
-        PoiCellData cellData = new PoiCellData(cellRef);
+        PoiCellData cellData = new PoiCellData(cellRef, cell);
         cellData.readCell(cell);
         cellData.updateFormulaValue();
         return cellData;
@@ -112,8 +119,35 @@ public class PoiCellData extends CellData {
         }else{
             updateCellGeneralInfo(cell);
             updateCellContents( cell );
-            updateCellStyle( cell );
+            CellStyle targetCellStyle = cellStyle;
+            if( context.getConfig().isIgnoreSourceCellStyle() ){
+                targetCellStyle = findCellStyle(evaluationResult, context.getConfig().getCellStyleMap());
+                if( targetCellStyle == null ){
+                    targetCellStyle = cellStyle;
+                }
+            }
+            updateCellStyle(cell, targetCellStyle);
         }
+    }
+
+    private CellStyle findCellStyle(Object evaluationResult, Map<String, String> cellStyleMap) {
+        if( evaluationResult == null || cellStyleMap == null){
+            return null;
+        }
+        String cellName = cellStyleMap.get(evaluationResult.getClass().getSimpleName());
+        if( cellName == null ){
+            return null;
+        }
+        Sheet sheet = cell.getSheet();
+        CellRef cellRef = new CellRef(cellName);
+        if( cellRef.getSheetName() == null ){
+            cellRef.setSheetName(sheet.getSheetName());
+        }
+        Workbook workbook = sheet.getWorkbook();
+        Sheet formatCellSheet = workbook.getSheet(cellRef.getSheetName());
+        Row formatRow = formatCellSheet.getRow(cellRef.getRow());
+        Cell formatCell = formatRow.getCell(cellRef.getCol(), Row.CREATE_NULL_AS_BLANK);
+        return formatCell.getCellStyle();
     }
 
     private void updateCellGeneralInfo(Cell cell) {
@@ -192,7 +226,7 @@ public class PoiCellData extends CellData {
         }
     }
 
-    private void updateCellStyle(Cell cell) {
+    private void updateCellStyle(Cell cell, CellStyle cellStyle) {
         cell.setCellStyle(cellStyle);
     }
 
