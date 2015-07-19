@@ -120,7 +120,7 @@ public class PoiTransformer extends AbstractTransformer {
             }
             try{
                 destCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK);
-                ((PoiCellData)cellData).writeToCell(destCell, context);
+                ((PoiCellData)cellData).writeToCell(destCell, context, this);
                 copyMergedRegions(cellData, targetCellRef);
             }catch(Exception e){
                 logger.error("Failed to write a cell with " + cellData + " and " + context, e);
@@ -307,5 +307,11 @@ public class PoiTransformer extends AbstractTransformer {
 
     public InputStream getInputStream() {
         return inputStream;
+    }
+
+    public CellStyle getCellStyle(CellRef cellRef) {
+        SheetData sheetData = sheetMap.get(cellRef.getSheetName());
+        PoiCellData cellData = (PoiCellData) sheetData.getRowData(cellRef.getRow()).getCellData(cellRef.getCol());
+        return cellData.getCellStyle();
     }
 }

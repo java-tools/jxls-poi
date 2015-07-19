@@ -105,7 +105,7 @@ class PoiCellDataTest extends Specification{
             context.putVar("x", 35)
             Cell targetCell = wb.getSheetAt(1).getRow(0).getCell(0)
         when:
-            cellData.writeToCell(targetCell, context)
+            cellData.writeToCell(targetCell, context, null)
         then:
             wb.getSheetAt(1).getRow(0).getCell(0).getNumericCellValue() == 35
     }
@@ -117,7 +117,7 @@ class PoiCellDataTest extends Specification{
             BigDecimal xValue = new BigDecimal(1234.56D)
             context.putVar("x", xValue)
         when:
-            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context)
+            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context, null)
         then:
             xValue == new BigDecimal( wb.getSheetAt(1).getRow(1).getCell(1).getNumericCellValue() )
     }
@@ -129,7 +129,7 @@ class PoiCellDataTest extends Specification{
             Date today = new Date()
             context.putVar("x", today)
         when:
-            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context)
+            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context, null)
         then:
             today == wb.getSheetAt(1).getRow(1).getCell(1).getDateCellValue()
     }
@@ -139,7 +139,7 @@ class PoiCellDataTest extends Specification{
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 0, 3),wb.getSheetAt(0).getRow(0).getCell(3))
             def context = new Context()
         when:
-            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context)
+            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context, null)
         then:
             wb.getSheetAt(1).getRow(1).getCell(1).getCellFormula() == "B2+B3"
     }
@@ -152,7 +152,7 @@ class PoiCellDataTest extends Specification{
             context.putVar("myvar2", 3)
             wb.getSheetAt(0).createRow(7).createCell(7)
         when:
-            cellData.writeToCell(wb.getSheetAt(0).getRow(7).getCell(7), context)
+            cellData.writeToCell(wb.getSheetAt(0).getRow(7).getCell(7), context, null)
         then:
             wb.getSheetAt(0).getRow(7).getCell(7).getCellFormula() == "2*SUM(A1:A5)+3"
     }
@@ -176,7 +176,7 @@ class PoiCellDataTest extends Specification{
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 1, 5), wb.getSheetAt(0).getRow(1).getCell(5))
             def context = new Context()
         when:
-            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context)
+            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context, null)
         then:
             wb.getSheetAt(1).getRow(1).getCell(1).getStringCellValue() == "SUM(U_(B1,B2)"
     }
@@ -192,7 +192,7 @@ class PoiCellDataTest extends Specification{
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 2", 1, 2), wb.getSheetAt(1).getRow(1).getCell(2))
             def poiContext = new PoiContext()
         when:
-            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(2), poiContext)
+            cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(2), poiContext, null)
         then:
             def hyperlink = wb.getSheetAt(1).getRow(1).getCell(2).getHyperlink()
             hyperlink != null

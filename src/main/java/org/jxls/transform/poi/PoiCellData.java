@@ -1,12 +1,12 @@
 package org.jxls.transform.poi;
 
-import org.jxls.util.Util;
-import org.jxls.common.CellData;
-import org.jxls.common.CellRef;
-import org.jxls.common.Context;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
+import org.jxls.common.CellData;
+import org.jxls.common.CellRef;
+import org.jxls.common.Context;
+import org.jxls.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +111,7 @@ public class PoiCellData extends CellData {
         cellStyle = cell.getCellStyle();
     }
 
-    public void writeToCell(Cell cell, Context context){
+    public void writeToCell(Cell cell, Context context, PoiTransformer transformer){
         evaluate(context);
         if( evaluationResult != null && evaluationResult instanceof WritableCellValue){
             cell.setCellStyle(cellStyle);
@@ -121,7 +121,7 @@ public class PoiCellData extends CellData {
             updateCellContents( cell );
             CellStyle targetCellStyle = cellStyle;
             if( context.getConfig().isIgnoreSourceCellStyle() ){
-                targetCellStyle = findCellStyle(evaluationResult, context.getConfig().getCellStyleMap());
+                targetCellStyle = findCellStyle(evaluationResult, context.getConfig().getCellStyleMap(), transformer);
                 if( targetCellStyle == null ){
                     targetCellStyle = cellStyle;
                 }
@@ -130,7 +130,7 @@ public class PoiCellData extends CellData {
         }
     }
 
-    private CellStyle findCellStyle(Object evaluationResult, Map<String, String> cellStyleMap) {
+    private CellStyle findCellStyle(Object evaluationResult, Map<String, String> cellStyleMap, PoiTransformer transformer) {
         if( evaluationResult == null || cellStyleMap == null){
             return null;
         }
@@ -143,11 +143,7 @@ public class PoiCellData extends CellData {
         if( cellRef.getSheetName() == null ){
             cellRef.setSheetName(sheet.getSheetName());
         }
-        Workbook workbook = sheet.getWorkbook();
-        Sheet formatCellSheet = workbook.getSheet(cellRef.getSheetName());
-        Row formatRow = formatCellSheet.getRow(cellRef.getRow());
-        Cell formatCell = formatRow.getCell(cellRef.getCol(), Row.CREATE_NULL_AS_BLANK);
-        return formatCell.getCellStyle();
+        return transformer.getCellStyle(cellRef);
     }
 
     private void updateCellGeneralInfo(Cell cell) {
