@@ -121,9 +121,9 @@ public class PoiCellData extends CellData {
             updateCellContents( cell );
             CellStyle targetCellStyle = cellStyle;
             if( context.getConfig().isIgnoreSourceCellStyle() ){
-                targetCellStyle = findCellStyle(evaluationResult, context.getConfig().getCellStyleMap(), transformer);
-                if( targetCellStyle == null ){
-                    targetCellStyle = cellStyle;
+                CellStyle dataFormatCellStyle = findCellStyle(evaluationResult, context.getConfig().getCellStyleMap(), transformer);
+                if( dataFormatCellStyle != null){
+                    targetCellStyle = dataFormatCellStyle;
                 }
             }
             updateCellStyle(cell, targetCellStyle);
