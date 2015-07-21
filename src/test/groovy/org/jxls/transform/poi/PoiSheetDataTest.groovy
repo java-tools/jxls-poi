@@ -41,7 +41,7 @@ class PoiSheetDataTest extends Specification{
     def "test read sheet data"(){
         when:
             Sheet sheet = wb.getSheetAt(0)
-            PoiSheetData sheetData = PoiSheetData.createSheetData(sheet)
+            PoiSheetData sheetData = PoiSheetData.createSheetData(sheet, null)
         then:
             sheet.getSheetName() == sheetData.getSheetName()
             sheet.getColumnWidth(2) == sheetData.getColumnWidth(2)

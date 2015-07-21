@@ -85,7 +85,7 @@ public class PoiTransformer extends AbstractTransformer {
         int numberOfSheets = workbook.getNumberOfSheets();
         for(int i = 0; i < numberOfSheets; i++){
             Sheet sheet = workbook.getSheetAt(i);
-            SheetData sheetData = PoiSheetData.createSheetData(sheet);
+            SheetData sheetData = PoiSheetData.createSheetData(sheet, this);
             sheetMap.put(sheetData.getSheetName(), sheetData);
         }
     }

@@ -15,9 +15,11 @@ import java.util.List;
 public class PoiSheetData extends SheetData {
     List<CellRangeAddress> mergedRegions = new ArrayList<CellRangeAddress>();
     Sheet sheet;
-    
-    public static PoiSheetData createSheetData(Sheet sheet){
+
+
+    public static PoiSheetData createSheetData(Sheet sheet, PoiTransformer transformer){
         PoiSheetData sheetData = new PoiSheetData();
+        sheetData.setTransformer(transformer);
         sheetData.sheet = sheet;
         sheetData.sheetName = sheet.getSheetName();
         sheetData.columnWidth = new int[256];
@@ -26,7 +28,7 @@ public class PoiSheetData extends SheetData {
         }
         int numberOfRows = sheet.getLastRowNum() + 1;
         for(int i = 0; i < numberOfRows; i++){
-            sheetData.rowDataList.add(PoiRowData.createRowData(sheet.getRow(i)));
+            sheetData.rowDataList.add(PoiRowData.createRowData(sheet.getRow(i), transformer));
         }
         for(int i = 0; i < sheet.getNumMergedRegions(); i++){
             CellRangeAddress region = sheet.getMergedRegion(i);
@@ -34,6 +36,8 @@ public class PoiSheetData extends SheetData {
         }
         return sheetData;
     }
+
+
 
     public List<CellRangeAddress> getMergedRegions() {
         return mergedRegions;
