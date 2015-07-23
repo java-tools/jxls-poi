@@ -1,5 +1,7 @@
 package org.jxls.transform.poi
 
+import org.jxls.transform.TransformationConfig
+import org.jxls.transform.Transformer
 import spock.lang.Specification
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.Sheet
@@ -65,6 +67,8 @@ class PoiCellDataTest extends Specification{
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 0, 1), wb.getSheetAt(0).getRow(0).getCell(1))
             def context = new Context()
             context.putVar("x", 35)
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         expect:
             cellData.evaluate(context) == 35
     }
@@ -75,6 +79,8 @@ class PoiCellDataTest extends Specification{
             def context = new Context()
             context.putVar("x", 2)
             context.putVar("y", 3)
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         expect:
             cellData.evaluate(context) == "4x and 6y"
     }
@@ -84,6 +90,8 @@ class PoiCellDataTest extends Specification{
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 1, 3),wb.getSheetAt(0).getRow(1).getCell(3))
             def context = new Context()
             context.putVar("x", 35)
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         expect:
             cellData.evaluate(context) == "35 words"
     }
@@ -94,6 +102,8 @@ class PoiCellDataTest extends Specification{
         context.putVar("x", 2)
         context.putVar("y", 3)
         context.putVar("cur", '$')
+        cellData.transformer = Mock(Transformer)
+        cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         expect:
             cellData.evaluate(context) == '4x and 6 $'
     }
@@ -104,6 +114,8 @@ class PoiCellDataTest extends Specification{
             def context = new Context()
             context.putVar("x", 35)
             Cell targetCell = wb.getSheetAt(1).getRow(0).getCell(0)
+            cellData.transformer = Mock(Transformer)
+        cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         when:
             cellData.writeToCell(targetCell, context, null)
         then:
@@ -116,6 +128,8 @@ class PoiCellDataTest extends Specification{
             def context = new Context()
             BigDecimal xValue = new BigDecimal(1234.56D)
             context.putVar("x", xValue)
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         when:
             cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context, null)
         then:
@@ -128,6 +142,8 @@ class PoiCellDataTest extends Specification{
             def context = new Context()
             Date today = new Date()
             context.putVar("x", today)
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         when:
             cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context, null)
         then:
@@ -138,6 +154,8 @@ class PoiCellDataTest extends Specification{
         setup:
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 0, 3),wb.getSheetAt(0).getRow(0).getCell(3))
             def context = new Context()
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         when:
             cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context, null)
         then:
@@ -151,6 +169,8 @@ class PoiCellDataTest extends Specification{
             context.putVar("myvar", 2)
             context.putVar("myvar2", 3)
             wb.getSheetAt(0).createRow(7).createCell(7)
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         when:
             cellData.writeToCell(wb.getSheetAt(0).getRow(7).getCell(7), context, null)
         then:
@@ -175,6 +195,8 @@ class PoiCellDataTest extends Specification{
         setup:
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 1", 1, 5), wb.getSheetAt(0).getRow(1).getCell(5))
             def context = new Context()
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         when:
             cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(1), context, null)
         then:
@@ -191,6 +213,8 @@ class PoiCellDataTest extends Specification{
         setup:
             PoiCellData cellData = PoiCellData.createCellData(new CellRef("sheet 2", 1, 2), wb.getSheetAt(1).getRow(1).getCell(2))
             def poiContext = new PoiContext()
+            cellData.transformer = Mock(Transformer)
+            cellData.getTransformer().getTransformationConfig() >> new TransformationConfig()
         when:
             cellData.writeToCell(wb.getSheetAt(1).getRow(1).getCell(2), poiContext, null)
         then:
