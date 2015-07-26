@@ -1,12 +1,12 @@
 package org.jxls.transform.poi;
 
-import org.jxls.transform.AbstractTransformer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jxls.common.*;
+import org.jxls.transform.AbstractTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -313,5 +313,17 @@ public class PoiTransformer extends AbstractTransformer {
         SheetData sheetData = sheetMap.get(cellRef.getSheetName());
         PoiCellData cellData = (PoiCellData) sheetData.getRowData(cellRef.getRow()).getCellData(cellRef.getCol());
         return cellData.getCellStyle();
+    }
+
+    @Override
+    public void deleteSheet(String sheetName) {
+        int sheetIndex = workbook.getSheetIndex(sheetName);
+        workbook.removeSheetAt(sheetIndex);
+    }
+
+    @Override
+    public void setHidden(String sheetName, boolean hidden) {
+        int sheetIndex = workbook.getSheetIndex(sheetName);
+        workbook.setSheetHidden(sheetIndex, hidden);
     }
 }
