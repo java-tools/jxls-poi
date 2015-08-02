@@ -1,6 +1,7 @@
 package org.jxls.transform.poi
 
 import org.apache.poi.ss.usermodel.PrintSetup
+import spock.lang.Ignore
 import spock.lang.Specification
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.Workbook
@@ -255,7 +256,7 @@ class PoiTransformerTest extends Specification{
         formulaCells.contains(new CellData("sheet 1",1,1, CellData.CellType.FORMULA, "SUM(A1:A3)"))
             formulaCells.contains(new CellData("sheet 1",2,4, CellData.CellType.STRING, '$[${myvar}*SUM(A1:A5) + ${myvar2}]'))
     }
-
+    @Ignore("The test is not used because the target cell setting was moved from Transformer to XlsArea")
     def "test get target cells"(){
         when:
             def poiTransformer = PoiTransformer.createTransformer(wb)
@@ -269,7 +270,7 @@ class PoiTransformerTest extends Specification{
             poiTransformer.getTargetCellRef(new CellRef("sheet 1",1,1)).toArray() == [new CellRef("sheet 2",10,10), new CellRef("sheet 1",10,12), new CellRef("sheet 1",10,14)]
             poiTransformer.getTargetCellRef(new CellRef("sheet 1",2,1)).toArray() == [new CellRef("sheet 2",20,11), new CellRef("sheet 1",20,12)]
     }
-
+    @Ignore("The test is not used because the target cell setting was moved from Transformer to XlsArea")
     def "test reset target cells"(){
         when:
             def poiTransformer = PoiTransformer.createTransformer(wb)
