@@ -209,17 +209,12 @@ public class PoiTransformer extends AbstractTransformer {
     public List<CellData> getCommentedCells() {
         List<CellData> commentedCells = new ArrayList<CellData>();
         for (SheetData sheetData : sheetMap.values()) {
+            PoiSheetData poiSheetData = (PoiSheetData) sheetData;
             for (RowData rowData : sheetData) {
                 if( rowData == null ) continue;
-                for (CellData cellData : rowData) {
-                    if(cellData != null && cellData.getCellComment() != null ){
-                        commentedCells.add(cellData);
-                    }
-                }
-                if( rowData.getNumberOfCells() == 0 ){
-                    List<CellData> commentedCellData = readCommentsFromSheet(((PoiSheetData)sheetData).getSheet(), ((PoiRowData)rowData).getRow());
-                    commentedCells.addAll( commentedCellData );
-                }
+                int row = ((PoiRowData) rowData).getRow().getRowNum();
+                List<CellData> cellDataList = readCommentsFromSheet(((PoiSheetData) sheetData).getSheet(), row);
+                commentedCells.addAll(cellDataList);
             }
         }
         return commentedCells;
@@ -283,9 +278,8 @@ public class PoiTransformer extends AbstractTransformer {
         return poiType;
     }
 
-    private List<CellData> readCommentsFromSheet(Sheet sheet, Row row) {
-        List<CellData> commentDataCells = new ArrayList<CellData>();
-        int rowNum = row.getRowNum();
+    private List<CellData> readCommentsFromSheet(Sheet sheet, int rowNum) {
+        List<CellData> commentDataCells = new ArrayList<>();
         for(int i = 0; i <= MAX_COLUMN_TO_READ_COMMENT; i++){
             Comment comment = sheet.getCellComment(rowNum, i);
             if( comment != null && comment.getString() != null ){

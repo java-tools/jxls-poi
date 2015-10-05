@@ -64,6 +64,9 @@ class PoiTransformerTest extends Specification{
         row2.createCell(2).setCellValue('${4*4}')
         row2.createCell(3).setCellValue('${2*x}x and ${2*y}y')
         row2.createCell(4).setCellValue('$[${myvar}*SUM(A1:A5) + ${myvar2}]')
+        def cell5 = row2.createCell(5)
+        PoiUtil.setCellComment( cell5, "Test comment", "leo", null );
+        row2.removeCell(cell5)
         ByteArrayOutputStream os = new ByteArrayOutputStream()
         wb.write(os)
         workbookBytes = os.toByteArray()
@@ -315,9 +318,10 @@ class PoiTransformerTest extends Specification{
             def transformer = PoiTransformer.createTransformer(wb)
             def commentedCells = transformer.getCommentedCells()
         then:
-            commentedCells.size() == 2
+            commentedCells.size() == 3
             commentedCells.get(0).getCellComment() == "comment 1"
             commentedCells.get(1).getCellComment() == "comment 2"
+            commentedCells.get(2).getCellComment() == "Test comment"
     }
 
     def "test addImage"(){
