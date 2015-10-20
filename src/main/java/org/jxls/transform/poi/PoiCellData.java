@@ -62,7 +62,16 @@ public class PoiCellData extends CellData {
             commentAuthor = comment.getAuthor();
         }
         if( comment != null && comment.getString() != null ){
-            setCellComment( comment.getString().getString() );
+            String commentString = comment.getString().getString();
+            String[] commentLines = commentString.split("\\n");
+            for(String commentLine : commentLines ){
+                if( isJxlsParamsComment(commentLine)){
+                    processJxlsParams(commentLine);
+                    comment = null;
+                    return;
+                }
+            }
+            setCellComment(commentString);
         }
     }
 
