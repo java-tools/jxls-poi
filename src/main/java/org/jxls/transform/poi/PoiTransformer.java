@@ -311,6 +311,7 @@ public class PoiTransformer extends AbstractTransformer {
 
     @Override
     public void deleteSheet(String sheetName) {
+        super.deleteSheet(sheetName);
         int sheetIndex = workbook.getSheetIndex(sheetName);
         workbook.removeSheetAt(sheetIndex);
     }
