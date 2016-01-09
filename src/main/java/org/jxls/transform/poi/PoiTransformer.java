@@ -128,6 +128,16 @@ public class PoiTransformer extends AbstractTransformer {
         }
     }
 
+    @Override
+    public void resetArea(AreaRef areaRef) {
+        // removing merged regions
+        Sheet destSheet = workbook.getSheet(areaRef.getSheetName());
+        int numMergedRegions = destSheet.getNumMergedRegions();
+        for(int i = 0; i < numMergedRegions; i++){
+            destSheet.removeMergedRegion(i);
+        }
+    }
+
     private void copyMergedRegions(CellData sourceCellData, CellRef destCell) {
         if(sourceCellData.getSheetName() == null ){ throw new IllegalArgumentException("Sheet name is null in copyMergedRegions");}
         PoiSheetData sheetData = (PoiSheetData)sheetMap.get( sourceCellData.getSheetName() );
@@ -200,6 +210,7 @@ public class PoiTransformer extends AbstractTransformer {
         if( cell.getCellComment() != null ){
             cell.removeCellComment();
         }
+        findAndRemoveExistingCellRegion(cellRef);
     }
 
     private void removeCellComment(Sheet sheet, int row, int col) {
