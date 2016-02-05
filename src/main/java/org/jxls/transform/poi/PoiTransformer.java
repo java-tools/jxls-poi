@@ -31,6 +31,7 @@ public class PoiTransformer extends AbstractTransformer {
     private boolean useSxssf = false;
     private OutputStream outputStream;
     private InputStream inputStream;
+    private Integer lastCommentedColumn = MAX_COLUMN_TO_READ_COMMENT;
 
     private PoiTransformer(Workbook workbook) {
         this.workbook = workbook;
@@ -79,6 +80,14 @@ public class PoiTransformer extends AbstractTransformer {
 
     public Workbook getWorkbook() {
         return workbook;
+    }
+
+    public Integer getLastCommentedColumn() {
+        return lastCommentedColumn;
+    }
+
+    public void setLastCommentedColumn(Integer lastCommentedColumn) {
+        this.lastCommentedColumn = lastCommentedColumn;
     }
 
     private void readCellData(){
@@ -291,7 +300,7 @@ public class PoiTransformer extends AbstractTransformer {
 
     private List<CellData> readCommentsFromSheet(Sheet sheet, int rowNum) {
         List<CellData> commentDataCells = new ArrayList<>();
-        for(int i = 0; i <= MAX_COLUMN_TO_READ_COMMENT; i++){
+        for(int i = 0; i <= lastCommentedColumn; i++){
             Comment comment = sheet.getCellComment(rowNum, i);
             if( comment != null && comment.getString() != null ){
                 CellData cellData = new CellData( new CellRef(sheet.getSheetName(), rowNum, i) );
