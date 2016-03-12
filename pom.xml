@@ -3,7 +3,7 @@
     <groupId>org.jxls</groupId>
     <artifactId>jxls-poi-jdk1.6</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.8-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Apache POI Transformer implementation for Jxls library</description>
     <url>http://jxls.sf.net</url>
