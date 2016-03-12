@@ -290,7 +290,7 @@ public class PoiTransformer extends AbstractTransformer {
     }
 
     private List<CellData> readCommentsFromSheet(Sheet sheet, int rowNum) {
-        List<CellData> commentDataCells = new ArrayList<>();
+        List<CellData> commentDataCells = new ArrayList<CellData>();
         for(int i = 0; i <= MAX_COLUMN_TO_READ_COMMENT; i++){
             Comment comment = sheet.getCellComment(rowNum, i);
             if( comment != null && comment.getString() != null ){
