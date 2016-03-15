@@ -36,7 +36,7 @@ public class PoiUtil {
 
     public static void copySheetProperties(Sheet src, Sheet dest){
         dest.setAutobreaks(src.getAutobreaks());
-        dest.setDisplayGridlines(src.getDisplayGuts());
+        dest.setDisplayGridlines(src.isDisplayGridlines());
         dest.setVerticallyCenter(src.getVerticallyCenter());
         dest.setFitToPage(src.getFitToPage());
         dest.setForceFormulaRecalculation(src.getForceFormulaRecalculation());
