@@ -71,8 +71,7 @@ public class PoiTransformer extends AbstractTransformer {
         return transformer;
     }
 
-    @Override
-    public Context createInitialContext() {
+    public static Context createInitialContext() {
         Context context = new Context();
         context.putVar(POI_CONTEXT_KEY, new PoiUtil());
         return context;
