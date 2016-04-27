@@ -130,7 +130,7 @@ public class PoiTransformer extends AbstractTransformer {
                 ((PoiCellData) cellData).writeToCell(destCell, context, this);
                 copyMergedRegions(cellData, targetCellRef);
             } catch (Exception e) {
-                logger.error("Failed to write a cell with " + cellData + " and " + context, e);
+                logger.error("Failed to write a cell with {} and context keys {}", cellData, context.toMap().keySet(), e);
             }
         }
     }
