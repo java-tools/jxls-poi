@@ -32,6 +32,7 @@ public class PoiTransformer extends AbstractTransformer {
     private OutputStream outputStream;
     private InputStream inputStream;
     private Integer lastCommentedColumn = MAX_COLUMN_TO_READ_COMMENT;
+    private boolean isSXSSF = false;
 
     private PoiTransformer(Workbook workbook) {
         this.workbook = workbook;
@@ -65,6 +66,7 @@ public class PoiTransformer extends AbstractTransformer {
 
     public static PoiTransformer createSxssfTransformer(Workbook workbook, int rowAccessWindowSize, boolean compressTmpFiles, boolean useSharedStringsTable) {
         PoiTransformer transformer = new PoiTransformer(workbook);
+        transformer.isSXSSF = true;
         transformer.readCellData();
         if (workbook instanceof XSSFWorkbook) {
             transformer.workbook = new SXSSFWorkbook((XSSFWorkbook) workbook, rowAccessWindowSize, compressTmpFiles, useSharedStringsTable);
@@ -101,7 +103,7 @@ public class PoiTransformer extends AbstractTransformer {
         }
     }
 
-    public void transform(CellRef srcCellRef, CellRef targetCellRef, Context context) {
+    public void transform(CellRef srcCellRef, CellRef targetCellRef, Context context, boolean updateRowHeightFlag) {
         CellData cellData = this.getCellData(srcCellRef);
         if (cellData != null) {
 
@@ -122,7 +124,7 @@ public class PoiTransformer extends AbstractTransformer {
             if (destRow == null) {
                 destRow = destSheet.createRow(targetCellRef.getRow());
             }
-            if (!isIgnoreRowProps()) {
+            if (updateRowHeightFlag && !isIgnoreRowProps()) {
                 destSheet.getRow(targetCellRef.getRow()).setHeight((short) sheetData.getRowData(srcCellRef.getRow()).getHeight());
             }
             org.apache.poi.ss.usermodel.Cell destCell = destRow.getCell(targetCellRef.getCol());
@@ -349,5 +351,22 @@ public class PoiTransformer extends AbstractTransformer {
     public void setHidden(String sheetName, boolean hidden) {
         int sheetIndex = workbook.getSheetIndex(sheetName);
         workbook.setSheetHidden(sheetIndex, hidden);
+    }
+
+    @Override
+    public void updateRowHeight(String srcSheetName, int srcRowNum, String targetSheetName, int targetRowNum) {
+        if (isSXSSF) return;
+        SheetData sheetData = sheetMap.get(srcSheetName);
+        RowData rowData = sheetData.getRowData(srcRowNum);
+        Sheet sheet = workbook.getSheet(targetSheetName);
+        if (sheet == null) {
+            sheet = workbook.createSheet(targetSheetName);
+        }
+        Row targetRow = sheet.getRow(targetRowNum);
+        if (targetRow == null) {
+            targetRow = sheet.createRow(targetRowNum);
+        }
+        short srcHeight = rowData != null ? (short) rowData.getHeight() : sheet.getDefaultRowHeight();
+        targetRow.setHeight(srcHeight);
     }
 }
