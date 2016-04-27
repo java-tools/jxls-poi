@@ -60,10 +60,14 @@ public class PoiTransformer extends AbstractTransformer {
     }
 
     public static PoiTransformer createSxssfTransformer(Workbook workbook, int rowAccessWindowSize, boolean compressTmpFiles) {
+        return createSxssfTransformer(workbook, rowAccessWindowSize, compressTmpFiles, false);
+    }
+
+    public static PoiTransformer createSxssfTransformer(Workbook workbook, int rowAccessWindowSize, boolean compressTmpFiles, boolean useSharedStringsTable) {
         PoiTransformer transformer = new PoiTransformer(workbook);
         transformer.readCellData();
         if (workbook instanceof XSSFWorkbook) {
-            transformer.workbook = new SXSSFWorkbook((XSSFWorkbook) workbook, rowAccessWindowSize, compressTmpFiles);
+            transformer.workbook = new SXSSFWorkbook((XSSFWorkbook) workbook, rowAccessWindowSize, compressTmpFiles, useSharedStringsTable);
         } else {
             throw new IllegalArgumentException("Failed to create POI Transformer using SXSSF API as the input workbook is not XSSFWorkbook");
         }
