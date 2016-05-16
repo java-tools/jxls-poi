@@ -221,7 +221,7 @@ public class PoiTransformer extends AbstractTransformer {
             return;
         }
         cell.setCellType(Cell.CELL_TYPE_BLANK);
-        cell.setCellStyle(workbook.getCellStyleAt((short) 0));
+        cell.setCellStyle(workbook.getCellStyleAt(0));
         if (cell.getCellComment() != null) {
             cell.removeCellComment();
         }
