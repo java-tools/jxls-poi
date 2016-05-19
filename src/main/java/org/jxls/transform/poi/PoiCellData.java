@@ -191,10 +191,9 @@ public class PoiCellData extends CellData {
     private void updateCellContents(Cell cell) {
         switch( targetCellType ){
             case STRING:
-                if( evaluationResult instanceof byte[]){
-
-                }else{
-                    cell.setCellValue((String) evaluationResult);
+                if( !(evaluationResult instanceof byte[])){
+                    String result = evaluationResult != null ? evaluationResult.toString() : "";
+                    cell.setCellValue(result);
                 }
                 break;
             case BOOLEAN:
