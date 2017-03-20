@@ -146,8 +146,8 @@ public class PoiTransformer extends AbstractTransformer {
         // removing merged regions
         Sheet destSheet = workbook.getSheet(areaRef.getSheetName());
         int numMergedRegions = destSheet.getNumMergedRegions();
-        for (int i = 0; i < numMergedRegions; i++) {
-            destSheet.removeMergedRegion(i);
+        for (int i = numMergedRegions; i > 0; i--) {
+            destSheet.removeMergedRegion(i - 1);
         }
     }
 
