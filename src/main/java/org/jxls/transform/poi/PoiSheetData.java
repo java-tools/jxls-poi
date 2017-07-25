@@ -27,7 +27,7 @@ public class PoiSheetData extends SheetData {
         for(int i = 0; i < numberOfRows; i++){
             RowData rowData = PoiRowData.createRowData(sheet.getRow(i), transformer);
             sheetData.rowDataList.add(rowData);
-            if( rowData.getNumberOfCells() > numberOfColumns ){
+            if( rowData!=null && rowData.getNumberOfCells() > numberOfColumns ){
                 numberOfColumns = rowData.getNumberOfCells();
             }
         }
