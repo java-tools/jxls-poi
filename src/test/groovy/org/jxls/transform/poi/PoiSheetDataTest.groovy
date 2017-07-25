@@ -1,10 +1,11 @@
 package org.jxls.transform.poi
 
-import spock.lang.Specification
-import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
-import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import spock.lang.Specification
 
 /**
  * @author Leonid Vysochyn
@@ -48,5 +49,21 @@ class PoiSheetDataTest extends Specification{
             sheet.getColumnWidth(1) == sheetData.getColumnWidth(1)
             sheet.getRow(0).getHeight() == sheetData.getRowData(0).getHeight()
             3 == sheetData.getNumberOfRows()
+    }
+
+    def "test create sheet data should support more than 256 columns"(){
+        given:
+        Workbook manyColWorkbook = new XSSFWorkbook()
+        Sheet sheet = manyColWorkbook.createSheet("sheet 1")
+        Row row0 = sheet.createRow(0)
+        for (int i = 0; i < 501; i++) {
+            row0.createCell(i).setCellValue(i)
+            sheet.setColumnWidth(i, i+1);
+        }
+        when:
+        PoiSheetData sheetData = PoiSheetData.createSheetData(sheet, null)
+        then:
+        401 == sheetData.getColumnWidth(400)
+        501 == sheetData.getColumnWidth(500)
     }
 }
