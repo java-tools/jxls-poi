@@ -249,6 +249,9 @@ public class PoiTransformer extends AbstractTransformer {
     private void addImage(AreaRef areaRef, int imageIdx) {
         CreationHelper helper = workbook.getCreationHelper();
         Sheet sheet = workbook.getSheet(areaRef.getSheetName());
+        if(sheet == null) {
+            sheet = workbook.createSheet(areaRef.getSheetName());
+        }
         Drawing drawing = sheet.createDrawingPatriarch();
         ClientAnchor anchor = helper.createClientAnchor();
         anchor.setCol1(areaRef.getFirstCellRef().getCol());
