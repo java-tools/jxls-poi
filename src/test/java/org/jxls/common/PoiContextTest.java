@@ -1,15 +1,14 @@
 package org.jxls.common;
 
-import org.jxls.transform.poi.PoiContext;
-import org.jxls.transform.poi.PoiUtil;
-import junit.framework.Assert;
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import org.junit.Assert;
+import org.junit.Test;
+import org.jxls.transform.poi.PoiContext;
+import org.jxls.transform.poi.PoiUtil;
 
 /**
  * @author Leonid Vysochyn
@@ -26,7 +25,7 @@ public class PoiContextTest {
 
     @Test
     public void createNonEmptyContext(){
-        Map vars = new HashMap();
+        Map<String, Object> vars = new HashMap<String, Object>();
         vars.put("a", 123);
         Context context = new PoiContext(vars);
         Object poiObject = context.getVar(PoiContext.POI_OBJECT_KEY);

@@ -1,20 +1,36 @@
 package org.jxls.transform.poi;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jxls.common.*;
-import org.jxls.transform.AbstractTransformer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jxls.common.AreaRef;
+import org.jxls.common.CellData;
+import org.jxls.common.CellRef;
+import org.jxls.common.Context;
+import org.jxls.common.ImageType;
+import org.jxls.common.RowData;
+import org.jxls.common.SheetData;
+import org.jxls.transform.AbstractTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * POI implementation of {@link org.jxls.transform.Transformer} interface
@@ -214,13 +230,14 @@ public class PoiTransformer extends AbstractTransformer {
         if (row == null) return;
         Cell cell = row.getCell(cellRef.getCol());
         if (cell == null) {
-            if (sheet.getCellComment(cellRef.getRow(), cellRef.getCol()) != null) {
+            CellAddress cellAddress = new CellAddress(cellRef.getRow(), cellRef.getCol());
+            if (sheet.getCellComment(cellAddress) != null) {
                 cell = row.createCell(cellRef.getCol());
                 cell.removeCellComment();
             }
             return;
         }
-        cell.setCellType(Cell.CELL_TYPE_BLANK);
+        cell.setCellType(CellType.BLANK);
         cell.setCellStyle(workbook.getCellStyleAt(0));
         if (cell.getCellComment() != null) {
             cell.removeCellComment();
@@ -228,14 +245,17 @@ public class PoiTransformer extends AbstractTransformer {
         findAndRemoveExistingCellRegion(cellRef);
     }
 
-    private void removeCellComment(Sheet sheet, int row, int col) {
-        Comment comment = sheet.getCellComment(row, col);
+    private void removeCellComment(Sheet sheet, int rowNum, int colNum) {
+        Row row = sheet.getRow(rowNum);
+        if( row == null ) return;
+        Cell cell = row.getCell(colNum);
+        if (cell == null) return;
+        cell.removeCellComment();
     }
 
     public List<CellData> getCommentedCells() {
         List<CellData> commentedCells = new ArrayList<CellData>();
         for (SheetData sheetData : sheetMap.values()) {
-            PoiSheetData poiSheetData = (PoiSheetData) sheetData;
             for (RowData rowData : sheetData) {
                 if (rowData == null) continue;
                 int row = ((PoiRowData) rowData).getRow().getRowNum();
@@ -308,9 +328,10 @@ public class PoiTransformer extends AbstractTransformer {
     }
 
     private List<CellData> readCommentsFromSheet(Sheet sheet, int rowNum) {
-        List<CellData> commentDataCells = new ArrayList<>();
+        List<CellData> commentDataCells = new ArrayList<CellData>();
         for (int i = 0; i <= lastCommentedColumn; i++) {
-            Comment comment = sheet.getCellComment(rowNum, i);
+            CellAddress cellAddress = new CellAddress(rowNum, i);
+            Comment comment = sheet.getCellComment(cellAddress);
             if (comment != null && comment.getString() != null) {
                 CellData cellData = new CellData(new CellRef(sheet.getSheetName(), rowNum, i));
                 cellData.setCellComment(comment.getString().getString());

@@ -5,7 +5,7 @@
     <packaging>jar</packaging>
     <version>1.0.14-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Apache POI Transformer implementation for Jxls library</description>
+    <description>Apache POI based Transformer implementation for Jxls library</description>
     <url>http://jxls.sf.net</url>
     <licenses>
         <license>
@@ -27,7 +27,7 @@
         <gmavenProviderSelection>2.0</gmavenProviderSelection>
         <groovyVersion>2.0.0</groovyVersion>
         <spockVersion>1.0-groovy-2.4</spockVersion>
-        <poi.version>3.16</poi.version>
+        <poi.version>3.17</poi.version>
     </properties>
 
     <scm>
@@ -52,8 +52,8 @@
               <artifactId>maven-compiler-plugin</artifactId>
               <version>3.3</version>
               <configuration>
-                  <source>1.7</source>
-                  <target>1.7</target>
+                  <source>1.6</source>
+                  <target>1.6</target>
               </configuration>
           </plugin>
 
