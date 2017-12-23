@@ -1,7 +1,14 @@
 package org.jxls.transform.poi;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.PrintSetup;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.jxls.builder.xls.XlsCommentAreaBuilder;
-import org.apache.poi.ss.usermodel.*;
 
 /**
  * POI utility methods

@@ -1,24 +1,23 @@
 package org.jxls.transform.poi
 
-import org.apache.poi.ss.usermodel.PrintSetup
-import spock.lang.Ignore
-import spock.lang.Specification
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Row
-
-import org.jxls.common.Context
-import org.jxls.common.CellData
-import org.jxls.common.CellRef
-import org.apache.poi.ss.util.CellRangeAddress
-import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellStyle
-import org.apache.poi.ss.usermodel.IndexedColors
+import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.Font
+import org.apache.poi.ss.usermodel.IndexedColors
+import org.apache.poi.ss.usermodel.PrintSetup
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.util.IOUtils
 import org.jxls.common.AreaRef
+import org.jxls.common.CellData
+import org.jxls.common.CellRef
+import org.jxls.common.Context
 import org.jxls.common.ImageType
+import spock.lang.Ignore
+import spock.lang.Specification
 
 /**
  * @author Leonid Vysochyn
@@ -130,7 +129,7 @@ class PoiTransformerTest extends Specification{
         then:
             Sheet sheet = wb.getSheet("sheet 2")
             Row row7 = sheet.getRow(7)
-            row7.getCell(7).cellType == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC
+            row7.getCell(7).cellTypeEnum == CellType.NUMERIC
             row7.getCell(7).getNumericCellValue() == 15
     }
 
@@ -143,7 +142,7 @@ class PoiTransformerTest extends Specification{
         then:
             Sheet sheet = wb.getSheet("sheet 2")
             Row row7 = sheet.getRow(7)
-            row7.getCell(7).cellType == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_FORMULA
+            row7.getCell(7).cellTypeEnum == CellType.FORMULA
             row7.getCell(7).getCellFormula() == "SUM(A1:A3)"
     }
 
@@ -203,7 +202,7 @@ class PoiTransformerTest extends Specification{
         Sheet sheet2 = wb.getSheet("sheet 2")
         sheet2.getRow(0).getCell(1).getNumericCellValue() == 1.5
         Row row10 = sheet2.getRow(10)
-        row10.getCell(1).getCellType() == org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING
+        row10.getCell(1).getCellTypeEnum() == CellType.STRING
         row10.getCell(1).getStringCellValue() == "Fghij"
     }
 
@@ -307,7 +306,7 @@ class PoiTransformerTest extends Specification{
             poiTransformer.clearCell(new CellRef("'sheet 1'!B1"))
         then:
             def cell = wb.getSheetAt(0).getRow(0).getCell(1)
-            cell.cellType == Cell.CELL_TYPE_BLANK
+            cell.cellTypeEnum == CellType.BLANK
             cell.stringCellValue == ""
             cell.cellStyle != customStyle
             cell.cellStyle == wb.getCellStyleAt((short)0)

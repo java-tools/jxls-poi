@@ -1,24 +1,29 @@
 package org.jxls.transform.poi;
 
+import java.util.Date;
+import java.util.Map;
 import org.apache.poi.ss.formula.FormulaParseException;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellReference;
-import org.jxls.common.CellData;
 import org.jxls.common.CellRef;
 import org.jxls.common.Context;
 import org.jxls.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.Map;
 
 /**
  * Cell data wrapper for POI cell
  * @author Leonid Vysochyn
  *         Date: 1/23/12
  */
-public class PoiCellData extends CellData {
+public class PoiCellData extends org.jxls.common.CellData {
     static Logger logger = LoggerFactory.getLogger(PoiCellData.class);
 
     RichTextString richTextString;
@@ -80,17 +85,17 @@ public class PoiCellData extends CellData {
     }
 
     private void readCellContents(Cell cell) {
-        switch( cell.getCellType() ){
-            case Cell.CELL_TYPE_STRING:
+        switch( cell.getCellTypeEnum() ){
+            case STRING:
                 richTextString = cell.getRichStringCellValue();
                 cellValue = richTextString.getString();
                 cellType = CellType.STRING;
                 break;
-            case Cell.CELL_TYPE_BOOLEAN:
+            case BOOLEAN:
                 cellValue = cell.getBooleanCellValue();
                 cellType = CellType.BOOLEAN;
                 break;
-            case Cell.CELL_TYPE_NUMERIC:
+            case NUMERIC:
                 if(DateUtil.isCellDateFormatted(cell)) {
                     cellValue = cell.getDateCellValue();
                     cellType = CellType.DATE;
@@ -99,16 +104,16 @@ public class PoiCellData extends CellData {
                     cellType = CellType.NUMBER;
                 }
                 break;
-            case Cell.CELL_TYPE_FORMULA:
+            case FORMULA:
                 formula = cell.getCellFormula();
                 cellValue = formula;
                 cellType = CellType.FORMULA;
                 break;
-            case Cell.CELL_TYPE_ERROR:
+            case ERROR:
                 cellValue = cell.getErrorCellValue();
                 cellType = CellType.ERROR;
                 break;
-            case Cell.CELL_TYPE_BLANK:
+            case BLANK:
                 cellValue = null;
                 cellType = CellType.BLANK;
                 break;
@@ -165,26 +170,26 @@ public class PoiCellData extends CellData {
         }
     }
 
-    static int getPoiCellType(CellType cellType){
+    static org.apache.poi.ss.usermodel.CellType getPoiCellType(CellType cellType){
         if( cellType == null ){
-            return Cell.CELL_TYPE_BLANK;
+            return org.apache.poi.ss.usermodel.CellType.BLANK;
         }
         switch (cellType){
             case STRING:
-                return Cell.CELL_TYPE_STRING;
+                return org.apache.poi.ss.usermodel.CellType.STRING;
             case BOOLEAN:
-                return Cell.CELL_TYPE_BOOLEAN;
+                return org.apache.poi.ss.usermodel.CellType.BOOLEAN;
             case NUMBER:
             case DATE:
-                return Cell.CELL_TYPE_NUMERIC;
+                return org.apache.poi.ss.usermodel.CellType.NUMERIC;
             case FORMULA:
-                return Cell.CELL_TYPE_FORMULA;
+                return org.apache.poi.ss.usermodel.CellType.FORMULA;
             case ERROR:
-                return Cell.CELL_TYPE_ERROR;
+                return org.apache.poi.ss.usermodel.CellType.ERROR;
             case BLANK:
-                return Cell.CELL_TYPE_BLANK;
+                return org.apache.poi.ss.usermodel.CellType.BLANK;
             default:
-                return Cell.CELL_TYPE_BLANK;
+                return org.apache.poi.ss.usermodel.CellType.BLANK;
         }
     }
 
@@ -213,11 +218,11 @@ public class PoiCellData extends CellData {
                         cell.setCellFormula((String) evaluationResult);
                     }
                 }catch(FormulaParseException e){
-                    String formulaString = "";
+                    String formulaString;
                     try{
                         formulaString = evaluationResult.toString();
                         logger.error("Failed to set cell formula " + formulaString + " for cell " + this.toString(), e);
-                        cell.setCellType(Cell.CELL_TYPE_STRING);
+                        cell.setCellType(org.apache.poi.ss.usermodel.CellType.STRING);
                         cell.setCellValue(formulaString);
                     }catch(Exception ex){
                         logger.warn("Failed to convert formula to string for cell " + this.toString());

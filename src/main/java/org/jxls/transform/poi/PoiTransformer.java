@@ -148,7 +148,7 @@ public class PoiTransformer extends AbstractTransformer {
                 destCell = destRow.createCell(targetCellRef.getCol());
             }
             try {
-                destCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK);
+                destCell.setCellType(CellType.BLANK);
                 ((PoiCellData) cellData).writeToCell(destCell, context, this);
                 copyMergedRegions(cellData, targetCellRef);
             } catch (Exception e) {
