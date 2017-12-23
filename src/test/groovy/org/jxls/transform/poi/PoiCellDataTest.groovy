@@ -1,19 +1,17 @@
 package org.jxls.transform.poi
 
+import org.apache.poi.common.usermodel.HyperlinkType
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.ss.usermodel.Workbook
+import org.jxls.common.CellRef
+import org.jxls.common.Context
 import org.jxls.transform.TransformationConfig
 import org.jxls.transform.Transformer
-import spock.lang.Specification
-import org.apache.poi.hssf.usermodel.HSSFWorkbook
-import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Workbook
-import org.jxls.common.Context
-import org.apache.poi.ss.usermodel.Cell
-
-import org.jxls.common.CellRef
 import spock.lang.Ignore
-import org.apache.poi.common.usermodel.Hyperlink
-
+import spock.lang.Specification
 /**
  * @author Leonid Vysochyn
  * Date: 1/30/12 5:52 PM
@@ -222,7 +220,7 @@ class PoiCellDataTest extends Specification{
             hyperlink != null
             hyperlink.address == "http://google.com/"
             wb.getSheetAt(1).getRow(1).getCell(2).getStringCellValue() == "Google"
-            hyperlink.type == Hyperlink.LINK_URL
+            hyperlink.typeEnum == HyperlinkType.URL
     }
 
 }

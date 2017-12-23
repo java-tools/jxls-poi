@@ -1,7 +1,14 @@
 package org.jxls.transform.poi;
 
+import org.apache.poi.common.usermodel.HyperlinkType;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.jxls.common.Context;
-import org.apache.poi.ss.usermodel.*;
 
 /**
  * Writable cell value implementation for Hyperlink
@@ -16,7 +23,7 @@ public class WritableHyperlink implements WritableCellValue {
 
     String address;
     String title;
-    int linkType;
+    HyperlinkType linkType;
 
     CellStyle linkStyle;
 
@@ -28,19 +35,19 @@ public class WritableHyperlink implements WritableCellValue {
         this.address = address;
         this.title = title;
         if( LINK_URL.equals(linkTypeString) ){
-            linkType = Hyperlink.LINK_URL;
+            linkType = HyperlinkType.URL;
         }else if( LINK_DOCUMENT.equals(linkTypeString) ){
-            linkType = Hyperlink.LINK_DOCUMENT;
+            linkType = HyperlinkType.DOCUMENT;
         }else if( LINK_EMAIL.equals(linkTypeString) ){
-            linkType = Hyperlink.LINK_EMAIL;
+            linkType = HyperlinkType.EMAIL;
         }else if( LINK_FILE.equals(linkTypeString) ){
-            linkType = Hyperlink.LINK_FILE;
+            linkType = HyperlinkType.FILE;
         }else {
             throw new IllegalArgumentException("Link type must be one of the following values: " + LINK_URL + "," + LINK_DOCUMENT + "," + LINK_EMAIL + "," + LINK_FILE);
         }
     }
 
-    public WritableHyperlink(String address, String title, int linkType) {
+    public WritableHyperlink(String address, String title, HyperlinkType linkType) {
         this.address = address;
         this.title = title;
         this.linkType = linkType;
