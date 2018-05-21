@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
  *         Date: 1/23/12
  */
 public class PoiCellData extends org.jxls.common.CellData {
-    static Logger logger = LoggerFactory.getLogger(PoiCellData.class);
+    private static Logger logger = LoggerFactory.getLogger(PoiCellData.class);
 
-    RichTextString richTextString;
+    private RichTextString richTextString;
     private CellStyle cellStyle;
     private Hyperlink hyperlink;
     private Comment comment;
@@ -127,7 +127,7 @@ public class PoiCellData extends org.jxls.common.CellData {
 
     public void writeToCell(Cell cell, Context context, PoiTransformer transformer){
         evaluate(context);
-        if( evaluationResult != null && evaluationResult instanceof WritableCellValue){
+        if(evaluationResult instanceof WritableCellValue){
             cell.setCellStyle(cellStyle);
             ((WritableCellValue)evaluationResult).writeToCell(cell, context);
         }else{
@@ -198,7 +198,11 @@ public class PoiCellData extends org.jxls.common.CellData {
             case STRING:
                 if( !(evaluationResult instanceof byte[])){
                     String result = evaluationResult != null ? evaluationResult.toString() : "";
-                    cell.setCellValue(result);
+                    if ( cellValue != null && cellValue.equals(result) ){
+                        cell.setCellValue(richTextString);
+                    }else {
+                        cell.setCellValue(result);
+                    }
                 }
                 break;
             case BOOLEAN:
