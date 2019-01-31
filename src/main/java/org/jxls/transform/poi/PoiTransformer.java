@@ -48,16 +48,56 @@ public class PoiTransformer extends AbstractTransformer {
     private OutputStream outputStream;
     private InputStream inputStream;
     private Integer lastCommentedColumn = MAX_COLUMN_TO_READ_COMMENT;
-    private boolean isSXSSF = false;
+    private final boolean isSXSSF;
 
+    /**
+     * No streaming
+     * @param workbook
+     */
     private PoiTransformer(Workbook workbook) {
+        this(workbook, false);
+    }
+
+    /**
+     * @param workbook
+     * @param streaming false: without streaming, true: with streaming (with default parameter values)
+     */
+    public PoiTransformer(Workbook workbook, boolean streaming) {
+        this(workbook, streaming, SXSSFWorkbook.DEFAULT_WINDOW_SIZE, false, false);
+    }
+
+    /**
+     * @param workbook
+     * @param streaming
+     * @param rowAccessWindowSize only used if streaming is true
+     * @param compressTmpFiles only used if streaming is true
+     * @param useSharedStringsTable only used if streaming is true
+     */
+    public PoiTransformer(Workbook workbook, boolean streaming, int rowAccessWindowSize, boolean compressTmpFiles, boolean useSharedStringsTable) {
         this.workbook = workbook;
+        isSXSSF = streaming;
+        readCellData();
+        if (isSXSSF) {
+            if (this.workbook instanceof XSSFWorkbook) {
+                this.workbook = new SXSSFWorkbook((XSSFWorkbook) this.workbook, rowAccessWindowSize, compressTmpFiles, useSharedStringsTable);
+            } else {
+                throw new IllegalArgumentException("Failed to create POI Transformer using SXSSF API as the input workbook is not XSSFWorkbook");
+            }
+        }
+    }
+    
+    protected boolean isStreaming() {
+        return isSXSSF;
+    }
+    
+    public void setInputStream(InputStream is) {
+        inputStream = is;
     }
 
     public static PoiTransformer createTransformer(InputStream is, OutputStream os) throws IOException, InvalidFormatException {
         PoiTransformer transformer = createTransformer(is);
-        transformer.outputStream = os;
-        transformer.inputStream = is;
+        transformer.setOutputStream(os);
+        transformer.setInputStream(is);
         return transformer;
     }
 
@@ -67,13 +107,11 @@ public class PoiTransformer extends AbstractTransformer {
     }
 
     public static PoiTransformer createTransformer(Workbook workbook) {
-        PoiTransformer transformer = new PoiTransformer(workbook);
-        transformer.readCellData();
-        return transformer;
+        return new PoiTransformer(workbook);
     }
 
     public static PoiTransformer createSxssfTransformer(Workbook workbook) {
-        return createSxssfTransformer(workbook, 100, false);
+        return createSxssfTransformer(workbook, SXSSFWorkbook.DEFAULT_WINDOW_SIZE, false);
     }
 
     public static PoiTransformer createSxssfTransformer(Workbook workbook, int rowAccessWindowSize, boolean compressTmpFiles) {
@@ -81,15 +119,7 @@ public class PoiTransformer extends AbstractTransformer {
     }
 
     public static PoiTransformer createSxssfTransformer(Workbook workbook, int rowAccessWindowSize, boolean compressTmpFiles, boolean useSharedStringsTable) {
-        PoiTransformer transformer = new PoiTransformer(workbook);
-        transformer.isSXSSF = true;
-        transformer.readCellData();
-        if (workbook instanceof XSSFWorkbook) {
-            transformer.workbook = new SXSSFWorkbook((XSSFWorkbook) workbook, rowAccessWindowSize, compressTmpFiles, useSharedStringsTable);
-        } else {
-            throw new IllegalArgumentException("Failed to create POI Transformer using SXSSF API as the input workbook is not XSSFWorkbook");
-        }
-        return transformer;
+        return new PoiTransformer(workbook, true, rowAccessWindowSize, compressTmpFiles, useSharedStringsTable);
     }
 
     public static Context createInitialContext() {
