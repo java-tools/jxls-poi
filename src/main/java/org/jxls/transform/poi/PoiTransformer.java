@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -20,6 +21,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jxls.common.AreaRef;
 import org.jxls.common.CellData;
@@ -28,6 +30,7 @@ import org.jxls.common.Context;
 import org.jxls.common.ImageType;
 import org.jxls.common.RowData;
 import org.jxls.common.SheetData;
+import org.jxls.common.Size;
 import org.jxls.transform.AbstractTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -392,5 +395,21 @@ public class PoiTransformer extends AbstractTransformer {
         }
         short srcHeight = rowData != null ? (short) rowData.getHeight() : sheet.getDefaultRowHeight();
         targetRow.setHeight(srcHeight);
+    }
+    
+    @Override
+    public void adjustTableSize(CellRef ref, Size size) {
+        if (getWorkbook() instanceof XSSFWorkbook) {
+            XSSFWorkbook wb = (XSSFWorkbook) getWorkbook();
+            for (XSSFTable table : wb.getSheet(ref.getSheetName()).getTables()) {
+                AreaRef areaRef = new AreaRef(table.getSheetName() + "!" + table.getCTTable().getRef());
+                if (areaRef.contains(ref)) {
+                    // Make Table higher
+                    areaRef.getLastCellRef().setRow(ref.getRow() + size.getHeight() - 1);
+                    table.getCTTable().setRef(
+                            areaRef.getFirstCellRef().toString(true) + ":" + areaRef.getLastCellRef().toString(true));
+                }
+            }
+        }
     }
 }

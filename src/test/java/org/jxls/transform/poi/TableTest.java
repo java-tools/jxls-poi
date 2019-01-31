@@ -17,7 +17,7 @@ public class TableTest {
     @Test
     public void testTable() throws IOException {
         List<TableTestObject> list = new ArrayList<TableTestObject>();
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 101; i++) {
             list.add(new TableTestObject("name-" + i, "address-" + i));
         }
         Context ctx = new Context();
